@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +20,14 @@ import android.widget.TextView;
 
 import com.example.dogappusingjepack.R;
 import com.example.dogappusingjepack.model.DogBreed;
+import com.example.dogappusingjepack.util.LoadImages;
 import com.example.dogappusingjepack.viewmodel.DetailViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import okhttp3.internal.Util;
 
 public class DetailFragment extends Fragment {
 
@@ -90,21 +93,26 @@ public class DetailFragment extends Fragment {
 //        tvLifeSpan.setText(dogLifespan);
 
         detailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
-        detailViewModel.fetch();
+        detailViewModel.fetch(dogUuid);
         observerData();
     }
 
     public void observerData(){
-        detailViewModel.dogBreed.observe(this, new Observer<DogBreed>() {
+        detailViewModel.dogBreedLive.observe(this, new Observer<DogBreed>() {
             @Override
             public void onChanged(DogBreed dogBreed) {
-                if(dogBreed != null && dogBreed instanceof DogBreed){
-                    ivDogImage.setTag(dogBreed.imageUrl);
+                if(dogBreed != null && dogBreed instanceof DogBreed && getContext()!=null){
+                  //  ivDogImage.setTag(dogBreed.imageUrl);
                     tvDogName.setText(dogBreed.dogBreed);
                     tvDogPurpose.setText(dogBreed.bredFor);
                     tvTemperament.setText(dogBreed.temperament);
                     tvLifeSpan.setText(dogBreed.lifespan);
+                    if(dogBreed.imageUrl != null){
+                        LoadImages.loadImages(ivDogImage,dogBreed.imageUrl,new CircularProgressDrawable(getContext()));
+                    }
                 }
+
+
             }
         });
     }

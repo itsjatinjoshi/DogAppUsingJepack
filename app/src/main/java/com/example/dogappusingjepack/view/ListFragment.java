@@ -72,10 +72,19 @@ public class ListFragment extends Fragment {
         listViewModel.refresh();
         dogsList.setLayoutManager(new LinearLayoutManager(getContext()));
         dogsList.setAdapter(dogListAdapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                dogsList.setVisibility(View.GONE);
+                tvListError.setVisibility(View.GONE);
+                pgBarLoadList.setVisibility(View.VISIBLE);
+                listViewModel.refreshDataByPassCache();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         observerViewModel();
-
-
-        onclickItem();
 
     }
 
@@ -108,25 +117,7 @@ public class ListFragment extends Fragment {
         });
     }
 
-    public void onclickItem() {
-        dogListAdapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Log.d("LIST_FRAGMENT_POSITION", "" + dogsList.getChildAdapterPosition(view));
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putString("image", String.valueOf(R.mipmap.dog_icon));
-//                bundle.putString("dogName","DOGNAME");
-//                bundle.putString("dogPurpose","DOGPURPOSE");
-//                bundle.putString("dogTemperament","DOGTEMPERMENT");
-//                bundle.putString("dogLifespan","LIFESPAN");
 
-                ListFragmentDirections.ActionDetail action = ListFragmentDirections.actionDetail(0);
-
-                Navigation.findNavController(view).navigate(action);
-            }
-        });
-    }
 
 
 }

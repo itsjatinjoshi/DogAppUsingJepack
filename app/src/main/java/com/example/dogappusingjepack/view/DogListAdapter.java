@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogappusingjepack.R;
@@ -56,6 +58,12 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
                 LoadImages.getCircularProgressDrawable(dogImage.getContext()));
         dogName.setText(dogBreeds.get(position).dogBreed);
         dogLifeSpan.setText(dogBreeds.get(position).lifespan);
+
+        LinearLayout linlay = holder.itemView.findViewById(R.id.dogLayout);
+        linlay.setOnClickListener(view -> {
+            ListFragmentDirections.ActionDetail action = ListFragmentDirections.actionDetail(dogBreeds.get(position).uUid);
+            Navigation.findNavController(linlay).navigate(action);
+        });
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
